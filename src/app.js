@@ -1,4 +1,4 @@
-import {createElement as ce, Children} from "react";
+import {createElement as ce, Children,lazy,Suspense} from "react";
 import ReactDOM from "react-dom/client";
 import { Title } from "./components/Header"; //Named import
 import HeaderComponent from "./components/Header"; //default import
@@ -9,9 +9,14 @@ import About from "./components/About";
 import Error from "./components/Error";
 import Contact from "./components/Contact";
 import RestaurantMenu from "./components/RestaurantMenu";
+import Profile from "./components/Profile";
+import Shimmer from "./components/Shimmer";
+
+
 //functional Component
 //Name of the component starts with capital letter although not mandatory but a good practice and convention 
-
+const Instamart=lazy(()=> import("./components/Instamart"));
+//Upon on Demand loading=> upon render ->suspend loading-> 
 
 const AppLayout=()=>(
         <div>
@@ -36,7 +41,12 @@ const appRouter=createBrowserRouter(
             {
                 path:"/about",
                 element:<About />,
-                errorElement: <Error />
+                errorElement: <Error />,
+                children:[{
+                    path: "profile", //path will be /about/profile
+                    element: <Profile />,
+                    errorElement: <Error />
+                }]
             },
             {
                 path:"/contact",
@@ -46,6 +56,11 @@ const appRouter=createBrowserRouter(
             {
                 path:"/restaurant/:rid",
                 element:<RestaurantMenu />
+            },
+            {
+                path:"/instamart",
+                element:<Suspense fallback={<Shimmer/>}><Instamart /></Suspense>,
+                errorElement:<Error />
             }
         ]
     }]

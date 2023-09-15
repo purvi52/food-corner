@@ -1,15 +1,11 @@
 import { useState,useEffect } from "react";
-import { IMG_CDN_URL, restaurantList } from "../config";
+import { IMG_CDN_URL, restaurantList,swiggy_api_URL } from "../config";
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
-import {Link} from "react-router-dom"
+import {Link} from "react-router-dom";
+import { datafilter } from "../utils/helper";
+import useOnline from "../utils/useOnline";
 //searchtxt is a local variable
-
-function datafilter(searchtext,restaurants){
-    return restaurants.filter((restaurant)=>
-    restaurant?.info?.name?.toLowerCase()?.includes(searchtext.toLowerCase())
-)
-}
 
 const Body=()=>{
     const [searchtext,setsearchtext]=useState(""); 
@@ -21,7 +17,7 @@ const Body=()=>{
     },[]);
 
     async function getRestaurants(){
-        const data= await fetch("https://corsproxy.io/?https://www.swiggy.com/dapi/restaurants/list/v5?lat=21.1702401&lng=72.83106070000001&page_type=DESKTOP_WEB_LISTING");
+        const data= await fetch(swiggy_api_URL);
         const json =await data.json();
         //optional chaining
         console.log(json);
@@ -29,6 +25,10 @@ const Body=()=>{
         setFilteredRestaurants(json?.data?.cards[2]?.card?.card?.gridElements?.infoWithStyle?.restaurants)
         console.log(allRestaurants);
     }
+
+    const offline=useOnline();
+    if(!offline)
+    return <h1>🔴 Offline, Please check your internet connection! </h1>
 
     if(!allRestaurants)
     return null;
