@@ -1,4 +1,4 @@
-import {createElement as ce, Children,lazy,Suspense} from "react";
+import {createElement as ce, Children,lazy,Suspense,useEffect,useState} from "react";
 import ReactDOM from "react-dom/client";
 import { Title } from "./components/Header"; //Named import
 import HeaderComponent from "./components/Header"; //default import
@@ -11,20 +11,33 @@ import Contact from "./components/Contact";
 import RestaurantMenu from "./components/RestaurantMenu";
 import Profile from "./components/Profile";
 import Shimmer from "./components/Shimmer";
-
+import { Provider } from "react-redux";
+import store from "./utils/store";
+import Cart from "./components/Cart";
 
 //functional Component
 //Name of the component starts with capital letter although not mandatory but a good practice and convention 
 const Instamart=lazy(()=> import("./components/Instamart"));
 //Upon on Demand loading=> upon render ->suspend loading-> 
 
-const AppLayout=()=>(
-        <div>
+const AppLayout=()=>
+{
+    const [user, setUser]=useState({
+        name:"PP",
+        email:"pp@gmail.com",
+    });
+
+    useEffect(()=>{
+        //authenticate users 9721345466 
+    },[])
+
+return (
+        <Provider store={store}>
             <HeaderComponent/>
             <Outlet /> 
             <Footer/>
-        </div>
-);
+        </Provider>
+)};
 
 const appRouter=createBrowserRouter(
     [{
@@ -60,6 +73,11 @@ const appRouter=createBrowserRouter(
             {
                 path:"/instamart",
                 element:<Suspense fallback={<Shimmer/>}><Instamart /></Suspense>,
+                errorElement:<Error />
+            },
+            {
+                path:"/cart",
+                element:<Cart/>,
                 errorElement:<Error />
             }
         ]

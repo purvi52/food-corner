@@ -37,20 +37,20 @@ const Body=()=>{
     // return <h1>No Restaurants match your filter</h1>
 
     return allRestaurants .length ===  0 ?<Shimmer/>:(
-        <>
-        <div className="search-container">
-            <input type="text" className="search-input" placeholder="search khana" value={searchtext} 
+        <div className="bg-rose-200">
+        <div className="search-container p-5 bg-gray-300 my-5 ">
+            <input type="text" className="focus:bg-teal-100" placeholder="search khana" value={searchtext} 
                 onChange={(e)=>{setsearchtext(e.target.value)}}
             />  
             <button 
-            className="search-btn" 
+            className="search-btn p-1  m-2 text-white bg-purple-500 rounded-md hover:bg-green-400" 
             onClick={()=> {
                     const data=datafilter(searchtext,allRestaurants);
                     setFilteredRestaurants(data);
             } }
             >search</button>
         </div>
-        <div className="restaurant-list">
+        <div className="flex flex-wrap">
             {filteredRestaurants?.map((restaurant)=>{
                 return (
                     <Link to={"/restaurant/"+restaurant.info.id} key={restaurant.info.id}><RestaurantCard {...restaurant.info}   /></Link>
@@ -58,7 +58,7 @@ const Body=()=>{
             );
             })}
         </div>
-        </>
+        </div>
     );
 };
 
